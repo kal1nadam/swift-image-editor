@@ -30,8 +30,8 @@
             filePath = "ImageEditor/Models/ImageEditorModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "21"
-            endingLineNumber = "21"
+            startingLineNumber = "22"
+            endingLineNumber = "22"
             landmarkName = "applyRedFilter(parallel:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -46,8 +46,8 @@
             filePath = "ImageEditor/Service/ImageProcessor.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
+            startingLineNumber = "161"
+            endingLineNumber = "161"
             landmarkName = "applyEdgeDetection(to:parallel:)"
             landmarkType = "7">
          </BreakpointContent>

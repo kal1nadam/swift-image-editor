@@ -56,7 +56,3 @@ struct ImageEditorView: View {
     }
 }
 
-
-#Preview {
-    ImageEditorView()
-}

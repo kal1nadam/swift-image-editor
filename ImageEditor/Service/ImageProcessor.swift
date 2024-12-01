@@ -73,30 +73,63 @@ struct ImageProcessing {
             [-1, -2, -1]
         ]
         
-        for row in 1..<height-1 {
-            for col in 1..<width-1 {
-                var gx = 0
-                var gy = 0
-                
-                for kyIndex in -1...1 {
-                    for kxIndex in -1...1 {
-                        let pixelIndex = ((row + kyIndex) * width + (col + kxIndex)) * bytesPerPixel
-                        let intensity = Int(pixelBuffer[pixelIndex+1]) // Use red component as intensity
-                                        
-                        gx += intensity * kx[kyIndex + 1][kxIndex + 1]
-                        gy += intensity * ky[kyIndex + 1][kxIndex + 1]
+        if(parallel){
+            
+            DispatchQueue.concurrentPerform(iterations: height - 2) { row in
+                let actualRow = row + 1 // Adjust row index to match the original range (1..<height-1)
+                for col in 1..<width-1 {
+                    var gx = 0
+                    var gy = 0
+                    
+                    for kyIndex in -1...1 {
+                        for kxIndex in -1...1 {
+                            let pixelIndex = ((actualRow + kyIndex) * width + (col + kxIndex)) * bytesPerPixel
+                            let intensity = Int(pixelBuffer[pixelIndex + 1]) // Use red component as intensity
+                            
+                            gx += intensity * kx[kyIndex + 1][kxIndex + 1]
+                            gy += intensity * ky[kyIndex + 1][kxIndex + 1]
+                        }
                     }
+                    
+                    let magnitude = UInt8(min(sqrt(Double(gx * gx + gy * gy)), 255))
+                    
+                    let outputIndex = (actualRow * width + col) * bytesPerPixel
+                    outputBuffer[outputIndex] = magnitude
+                    outputBuffer[outputIndex + 1] = magnitude
+                    outputBuffer[outputIndex + 2] = magnitude
+                    outputBuffer[outputIndex + 3] = 255 // Alpha channel
                 }
-                
-                let magnitude = UInt8(min(sqrt(Double(gx * gx + gy * gy)), 255))
-                
-                let outputIndex = (row * width + col) * bytesPerPixel
-                outputBuffer[outputIndex] = magnitude
-                outputBuffer[outputIndex + 1] = magnitude
-                outputBuffer[outputIndex + 2] = magnitude
-                outputBuffer[outputIndex + 3] = 255 // Alpha channel
             }
         }
+        else{
+            
+            for row in 1..<height-1 {
+                for col in 1..<width-1 {
+                    var gx = 0
+                    var gy = 0
+                    
+                    for kyIndex in -1...1 {
+                        for kxIndex in -1...1 {
+                            let pixelIndex = ((row + kyIndex) * width + (col + kxIndex)) * bytesPerPixel
+                            let intensity = Int(pixelBuffer[pixelIndex+1]) // Use red component as intensity
+                                            
+                            gx += intensity * kx[kyIndex + 1][kxIndex + 1]
+                            gy += intensity * ky[kyIndex + 1][kxIndex + 1]
+                        }
+                    }
+                    
+                    let magnitude = UInt8(min(sqrt(Double(gx * gx + gy * gy)), 255))
+                    
+                    let outputIndex = (row * width + col) * bytesPerPixel
+                    outputBuffer[outputIndex] = magnitude
+                    outputBuffer[outputIndex + 1] = magnitude
+                    outputBuffer[outputIndex + 2] = magnitude
+                    outputBuffer[outputIndex + 3] = 255 // Alpha channel
+                }
+            }
+        }
+        
+        
         
         // Create a new bitmap with the output buffer
         let outputImage = NSImage(size: image.size)

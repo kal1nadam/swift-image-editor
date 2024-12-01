@@ -7,6 +7,7 @@ class ImageEditorModel: ObservableObject {
     
     
     func pickImage() {
+        self.processingTime = 0
         ImagePicker.pickImage { [weak self] image in
             DispatchQueue.main.async {
                 if let image = image {
@@ -38,6 +39,7 @@ class ImageEditorModel: ObservableObject {
     }
     
     func resetImage() {
+        self.processingTime = 0
         if let originalImage = originalImage {
             self.currentImage = originalImage.copy() as? NSImage
         }
