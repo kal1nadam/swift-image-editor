@@ -17,13 +17,29 @@ struct ImageEditorView: View {
                     .border(Color.gray, width: 1)
             }
             
-            HStack {
+            HStack(alignment: .top, spacing: 20){
                 Button("Upload Image") {
                     model.pickImage()
                 }
                 
-                Button("Red Filter") {
-                    model.applyRedFilter()
+                VStack(alignment: .leading) {
+                    Button("Red Filter") {
+                        model.applyRedFilter()
+                    }
+                    
+                    Button("Red Filter +") {
+                        model.applyRedFilter(parallel: true)
+                    }
+                }
+                
+                VStack(alignment: .leading) {
+                    Button("Edge Detection") {
+                        model.applyEdgeDetection()
+                    }
+                    
+                    Button("Edge Detection +") {
+                        model.applyEdgeDetection(parallel: true)
+                    }
                 }
                 
                 Button("Cancel") {
@@ -31,7 +47,16 @@ struct ImageEditorView: View {
                 }
             }
             .padding()
+            
+            if model.processingTime > 0 {
+                Text("Processing Time: \(model.processingTime, specifier: "%.2f") seconds")
+            }
         }
         .padding()
     }
+}
+
+
+#Preview {
+    ImageEditorView()
 }

@@ -3,6 +3,8 @@ import SwiftUI
 class ImageEditorModel: ObservableObject {
     @Published var currentImage: NSImage?
     private var originalImage: NSImage?
+    @Published var processingTime: TimeInterval = 0
+    
     
     func pickImage() {
         ImagePicker.pickImage { [weak self] image in
@@ -15,9 +17,24 @@ class ImageEditorModel: ObservableObject {
         }
     }
     
-    func applyRedFilter() {
+    func applyRedFilter(parallel: Bool = false) {
         guard let currentImage = currentImage else { return }
-        self.currentImage = ImageProcessing.applyRedFilter(to: currentImage)
+        
+        let start = Date()
+        self.currentImage = ImageProcessing.applyRedFilter(to: currentImage, parallel: parallel)
+        let end = Date()
+        
+        self.processingTime = end.timeIntervalSince(start)
+    }
+    
+    func applyEdgeDetection(parallel: Bool = false) {
+        guard let currentImage = currentImage else { return }
+        
+        let start = Date()
+        self.currentImage = ImageProcessing.applyEdgeDetection(to: currentImage, parallel: parallel)
+        let end = Date()
+        
+        self.processingTime = end.timeIntervalSince(start)
     }
     
     func resetImage() {

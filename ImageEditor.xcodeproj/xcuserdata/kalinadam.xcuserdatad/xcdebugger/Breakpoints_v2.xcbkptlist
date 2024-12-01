@@ -14,9 +14,9 @@
             filePath = "ImageEditor/Service/ImageProcessor.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "32"
-            endingLineNumber = "32"
-            landmarkName = "applyRedFilter(to:)"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "applyRedFilter(to:parallel:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -30,9 +30,25 @@
             filePath = "ImageEditor/Models/ImageEditorModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "19"
-            endingLineNumber = "19"
-            landmarkName = "applyRedFilter()"
+            startingLineNumber = "21"
+            endingLineNumber = "21"
+            landmarkName = "applyRedFilter(parallel:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "93F7B7C0-282B-4981-8055-A12BEFE2393F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ImageEditor/Service/ImageProcessor.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "128"
+            endingLineNumber = "128"
+            landmarkName = "applyEdgeDetection(to:parallel:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
