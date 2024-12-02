@@ -8,16 +8,18 @@
 import AppKit
 
 struct ImageProcessing {
-    
-    static func applyRedFilter(to image: NSImage, parallel: Bool) -> NSImage {
+    mutating func applyRedFilter(to image: NSImage, parallel: Bool) -> NSImage {
         // get a bitmap
         guard let bitmap = NSBitmapImageRep(data: image.tiffRepresentation!) else { return image }
         
+        // Ensure we have access to bitmap data
         guard let pixelBuffer = bitmap.bitmapData else { return image }
         
         let bytesPerPixel = bitmap.bitsPerPixel / 8
         let width = bitmap.pixelsWide
         let height = bitmap.pixelsHigh
+        
+//        currentTask?.cancel()
         
         if(parallel){
             DispatchQueue.concurrentPerform(iterations: height) { row in
@@ -37,6 +39,7 @@ struct ImageProcessing {
                     pixelBuffer[pixelIndex] = 255
                 }
             }
+            
         }
         
         
@@ -48,7 +51,7 @@ struct ImageProcessing {
         return filteredImage
     }
     
-    static func applyEdgeDetection(to image: NSImage, parallel: Bool) -> NSImage{
+    func applyEdgeDetection(to image: NSImage, parallel: Bool) -> NSImage{
         // Convert the image into bitmap
         guard let bitmap = NSBitmapImageRep(data: image.tiffRepresentation!) else { return image }
         guard let pixelBuffer = bitmap.bitmapData else { return image }
@@ -159,6 +162,69 @@ struct ImageProcessing {
         }
         
         return outputImage
+    }
+    
+    func applyBlackAndWhiteFilter(to image: NSImage, parallel: Bool) -> NSImage{
+        // get a bitmap
+        guard let bitmap = NSBitmapImageRep(data: image.tiffRepresentation!) else { return image }
+        
+        guard let pixelBuffer = bitmap.bitmapData else { return image }
+        
+        let bytesPerPixel = bitmap.bitsPerPixel / 8
+        let width = bitmap.pixelsWide
+        let height = bitmap.pixelsHigh
+        
+        if(parallel){
+            DispatchQueue.concurrentPerform(iterations: height) { row in
+                for col in 0..<width {
+                    let pixelIndex = (row * width + col) * bytesPerPixel
+                    
+                    // Extract RGB components
+                    let red = Double(pixelBuffer[pixelIndex])
+                    let green = Double(pixelBuffer[pixelIndex + 1])
+                    let blue = Double(pixelBuffer[pixelIndex + 2])
+                    
+                    // Calculate grayscale value
+                    let grayscale = UInt8(0.299 * red + 0.587 * green + 0.114 * blue)
+                    
+                    // Set all color components to grayscale
+                    pixelBuffer[pixelIndex] = grayscale    // Red
+                    pixelBuffer[pixelIndex + 1] = grayscale // Green
+                    pixelBuffer[pixelIndex + 2] = grayscale // Blue
+                    pixelBuffer[pixelIndex + 3] = 255       // Alpha remains the same
+                }
+            }
+        }
+        else{
+            for row in 0..<height {
+                for col in 0..<width {
+                    let pixelIndex = (row * width + col) * bytesPerPixel
+                    
+                    // Extract RGB components
+                    let red = Double(pixelBuffer[pixelIndex])
+                    let green = Double(pixelBuffer[pixelIndex + 1])
+                    let blue = Double(pixelBuffer[pixelIndex + 2])
+                    
+                    // Calculate grayscale value
+                    let grayscale = UInt8(0.299 * red + 0.587 * green + 0.114 * blue)
+                    
+                    // Set all color components to grayscale
+                    pixelBuffer[pixelIndex] = grayscale    // Red
+                    pixelBuffer[pixelIndex + 1] = grayscale // Green
+                    pixelBuffer[pixelIndex + 2] = grayscale // Blue
+                    pixelBuffer[pixelIndex + 3] = 255       // Alpha remains the same
+                }
+            }
+        }
+        
+        
+        
+        // Create a new NSImage from the modified bitmap
+        let filteredImage = NSImage(size: image.size)
+        filteredImage.addRepresentation(bitmap)
+        
+        return filteredImage
+        
     }
 }
 
